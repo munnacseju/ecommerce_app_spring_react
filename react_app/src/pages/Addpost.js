@@ -3,26 +3,27 @@ import { connect } from "react-redux";
 import { authenticate, authFailure, authSuccess } from "../redux/authActions";
 import "./loginpage.css";
 import { userLogin } from "../api/authenticationService";
+import { postAProduct } from "../api/postService";
 import { Alert, Spinner } from "react-bootstrap";
 
-const LoginPage = ({ loading, error, ...props }) => {
+const Addpost = ({ loading, error, ...props }) => {
   const [values, setValues] = useState({
-    userName: "",
-    password: "",
+    productName: "",
+    price: "",
   });
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    props.authenticate();
-
-    userLogin(values)
+    postAProduct(values)
       .then((response) => {
-        console.log("response", response);
+        console.log("response", response + "klsdfjkdsfjk");
+        console.log("values ", values + " jsdkf");
         if (response.status === 200) {
-          props.setUser(response.data);
+          alert("Successfully posted product");
+          // props.setUser(response.data);
           props.history.push("/dashboard");
         } else {
-          props.loginFailure("Something Wrong!Please Try Again");
+          alert("Something Wrong!Please Try Again 1");
         }
       })
       .catch((err) => {
@@ -30,13 +31,13 @@ const LoginPage = ({ loading, error, ...props }) => {
           switch (err.response.status) {
             case 401:
               console.log("401 status");
-              props.loginFailure("Authentication Failed.Bad Credentials");
+              alert("Authentication Failed.Bad Credentials");
               break;
             default:
-              props.loginFailure("Something Wrong!Please Try Again");
+              alert(
+                "Something Wrong!Please Try Again 2  " + err.response.status
+              );
           }
-        } else {
-          props.loginFailure("Something Wrong!Please Try Again");
         }
       });
     //console.log("Loading again",loading);
@@ -60,7 +61,7 @@ const LoginPage = ({ loading, error, ...props }) => {
             <div className="card-wrapper">
               <div className="card fat">
                 <div className="card-body">
-                  <h4 className="card-title">Login</h4>
+                  <h4 className="card-title">Add Post</h4>
 
                   <form
                     className="my-login-validation"
@@ -68,62 +69,41 @@ const LoginPage = ({ loading, error, ...props }) => {
                     noValidate={false}
                   >
                     <div className="form-group">
-                      <label htmlFor="email">User Name</label>
+                      <label htmlFor="email">Product Name</label>
                       <input
-                        id="username"
+                        id="productName"
                         type="text"
                         className="form-control"
                         minLength={2}
-                        value={values.userName}
+                        value={values.productName}
                         onChange={handleChange}
-                        name="userName"
+                        name="productName"
                         required
                       />
 
-                      <div className="invalid-feedback">UserId is invalid</div>
+                      <div className="invalid-feedback">
+                        product Name is invalid
+                      </div>
                     </div>
 
                     <div className="form-group">
-                      <label>
-                        Password
-                        <a href="forgot.html" className="float-right">
-                          Forgot Password?
-                        </a>
-                      </label>
+                      <label>Price</label>
                       <input
-                        id="password"
-                        type="password"
+                        id="text"
+                        type="text"
                         className="form-control"
                         minLength={2}
-                        value={values.password}
+                        value={values.price}
                         onChange={handleChange}
-                        name="password"
+                        name="price"
                         required
                       />
-                      <div className="invalid-feedback">
-                        Password is required
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <div className="custom-control custom-checkbox">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="customCheck1"
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="customCheck1"
-                        >
-                          Remember me
-                        </label>
-                      </div>
+                      <div className="invalid-feedback">price is required</div>
                     </div>
 
                     <div className="form-group m-0">
                       <button type="submit" className="btn btn-primary">
-                        Login
+                        Add a post
                         {loading && (
                           <Spinner
                             as="span"
@@ -151,20 +131,20 @@ const LoginPage = ({ loading, error, ...props }) => {
   );
 };
 
-const mapStateToProps = ({ auth }) => {
-  console.log("state ", auth);
-  return {
-    loading: auth.loading,
-    error: auth.error,
-  };
-};
+// const mapStateToProps = ({ auth }) => {
+//   console.log("state ", auth);
+//   return {
+//     loading: auth.loading,
+//     error: auth.error,
+//   };
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    authenticate: () => dispatch(authenticate()),
-    setUser: (data) => dispatch(authSuccess(data)),
-    loginFailure: (message) => dispatch(authFailure(message)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     authenticate: () => dispatch(authenticate()),
+//     setUser: (data) => dispatch(authSuccess(data)),
+//     loginFailure: (message) => dispatch(authFailure(message)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect()(Addpost);

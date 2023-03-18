@@ -88,29 +88,16 @@ public class AuthController {
 			response.put("error", "User is already registered!");
 			return response;
 		}
-//        user.setSaveFirstPassword(user.getPassword());
 		user.setPassword(passwordEncoder().encode(user.getPassword()));
 
 		Random r = new Random();
-		int low = 10000;
-		int high = 99999;
-		int result = r.nextInt(high - low) + low;
+		int result = r.nextInt(99999 - 10000) + 10000;
+		
 		String verificationPin = String.valueOf(result);
 		List<Authority> authorityList = new ArrayList<>();
-
 		authorityList.add(createAuthority("USER", "User role"));
-		authorityList.add(createAuthority("ADMIN", "Admin role"));
+//		authorityList.add(createAuthority("ADMIN", "Admin role"));
 		user.setAuthorities(authorityList);
-//        Random random = new Random(System.currentTimeMillis());
-		// Todo:
-//        Claims claims = Jwts.claims().setSubject(user.getEmail());
-//        List<String> roles = new ArrayList<>();
-//        roles.add("ROLE_USER");
-//        claims.put("roles", roles);
-
-//        user.setUserRole(UserRole.ROLE_USER.toString());
-//        user.setVerificationPin(verificationPin);
-//        user.setIsVerified(false);
 		userService.save(user);
 		response.put("status", EcommerceConstant.STATUS.OK);
 		response.put("message", "Successfully registered!");

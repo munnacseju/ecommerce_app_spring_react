@@ -1,0 +1,54 @@
+URL: 
+localhost:8080/api/addProduct
+
+Sample Request:
+{
+    "description": "character sd",
+    "imageBase64": "text sd",
+    "price": 100,
+    "productName": "character varyin",
+    "qty": 200,
+    "userId": 1
+}
+
+
+Sample Response:
+{
+    "product": {
+        "id": 3,
+        "user": {
+            "id": 16,
+            "userName": "abc",
+            "password": "$2a$10$SpP4q2gCvrjr./xJkx7n1Ot3AfpVeny6QfjsKNZiv4XL94v.3pycu",
+            "firstName": "Motiur Rahman",
+            "lastName": "Munna",
+            "authorities": [
+                {
+                    "id": 6,
+                    "roleCode": "USER",
+                    "roleDescription": "User role",
+                    "authority": "USER"
+                },
+                {
+                    "id": 7,
+                    "roleCode": "ADMIN",
+                    "roleDescription": "Admin role",
+                    "authority": "ADMIN"
+                }
+            ],
+            "enabled": true,
+            "username": "abc",
+            "accountNonExpired": true,
+            "accountNonLocked": true,
+            "credentialsNonExpired": true
+        },
+        "productName": "character varyin",
+        "qty": 200,
+        "price": 100,
+        "description": "character sd",
+        "imageBase64": "text sd"
+    },
+    "message": "Successfully added product",
+    "status": "OK"
+}
+
