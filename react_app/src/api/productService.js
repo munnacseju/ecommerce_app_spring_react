@@ -15,3 +15,16 @@ export const postAProduct = (authRequest) => {
     data: authRequest,
   });
 };
+
+export const viewProducts = (authRequest) => {
+  return axios({
+    method: "GET",
+    url: `${
+      process.env.hostUrl || "http://localhost:8080"
+    }/api/findAllProducts`,
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+    data: authRequest,
+  });
+};

@@ -29,13 +29,15 @@ public class ProductController {
     public static final String ADD_Product = "/addProduct";
     public static final String FIND_Product_BY_ID = "/findProduct/{id}";
     public static final String FIND_ALL_Product_BY_USER = "/findAllProduct";
+    public static final String FIND_ALL_PRODUCTS = "/findAllProducts";
+
     public static final String DELETE_Product = "/deleteProduct/{id}";
 
     @Autowired
     private UserService userService;
     
     @Autowired
-    private ProductService ProductService;
+    private ProductService productService;
     
     @RequestMapping(value = ADD_Product, method = RequestMethod.POST)
     @ResponseBody
@@ -55,7 +57,7 @@ public class ProductController {
         List<Authority> authorities = (List<Authority>) user.getAuthorities();
         if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
             product.setUser(user);
-            ProductService.save(product);
+            productService.save(product);
             response.put("product", product);
             response.put("status", EcommerceConstant.STATUS.OK);
             response.put("message", "Successfully added product");
@@ -66,15 +68,28 @@ public class ProductController {
             return response;
         }
     }
-
-    @RequestMapping(value = FIND_ALL_Product_BY_USER, method = RequestMethod.GET)
+    
+    @RequestMapping(value = FIND_ALL_PRODUCTS, method = RequestMethod.GET)
     @ResponseBody
-    public HashMap<String, Object> findBabiesByUser() {
+    public HashMap<String, Object> findProducts() {
         HashMap<String, Object> response = new HashMap<>();
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> userOptional = userService.findByUserName(email);
         User user = userOptional.get();
-        response.put("products", ProductService.findByUser(user));
+        response.put("products", productService.findAl());
+        response.put("status", EcommerceConstant.STATUS.OK);
+        // ProductService.findByUser(user);
+        return response;
+    }
+
+    @RequestMapping(value = FIND_ALL_Product_BY_USER, method = RequestMethod.GET)
+    @ResponseBody
+    public HashMap<String, Object> findProductByUser() {
+        HashMap<String, Object> response = new HashMap<>();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> userOptional = userService.findByUserName(email);
+        User user = userOptional.get();
+        response.put("products", productService.findByUser(user));
         response.put("status", EcommerceConstant.STATUS.OK);
         // ProductService.findByUser(user);
         return response;
@@ -84,7 +99,7 @@ public class ProductController {
     @ResponseBody
     public HashMap<String, Object> deleteProduct(@PathVariable Long id) {
         HashMap<String, Object> response = new HashMap<>();
-        ProductService.deleteById(id);
+        productService.deleteById(id);
         response.put("status", EcommerceConstant.STATUS.OK);
         response.put("message", "Successfully Product deleted");
         return response;

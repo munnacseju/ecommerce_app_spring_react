@@ -3,7 +3,10 @@ import { Button, Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { fetchUserData } from "../../api/authenticationService";
-import Addpost from "../Addpost";
+import AddProduct from "../AddProduct";
+import ViewProduct from "../ViewProduct";
+import Header from "../Header";
+import Footer from "../Footer";
 
 const MainWrapper = styled.div`
   padding-top: 40px;
@@ -32,6 +35,7 @@ export const Dashboard = (props) => {
 
   return (
     <Container>
+      <Header />
       <MainWrapper>
         <h4>Hello {data && `${data.firstName} ${data.lastName}`}</h4>
         <br></br>
@@ -41,7 +45,8 @@ export const Dashboard = (props) => {
             0 && (
             <h3 type="variant">
               {/* Add User */}
-              <Addpost />
+              <AddProduct />
+              <ViewProduct />
             </h3>
           )}
         <br></br>
@@ -50,6 +55,7 @@ export const Dashboard = (props) => {
           Logout
         </Button>
       </MainWrapper>
+      <Footer />
     </Container>
   );
 };

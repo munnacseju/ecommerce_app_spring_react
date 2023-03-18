@@ -13,23 +13,28 @@ import com.daycare.app.backend.repositories.ProductRepository;
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
-	private ProductRepository ProductRepository;
+	private ProductRepository productRepository;
 	
 	@Override
 	public void save(Product Product) {
-		ProductRepository.save(Product); 
+		productRepository.save(Product); 
 	}
 
 	@Override
 	public Optional<Product> findById(Long id) {
-		return ProductRepository.findById(id);
+		return productRepository.findById(id);
 	}
 	@Override
 	public Iterable<Product> findByUser(User user) {
-		return ProductRepository.findByUser(user);
+		return productRepository.findByUser(user);
 	}
 	@Override
 	public void deleteById(Long id) {
-		ProductRepository.deleteById(id);
+		productRepository.deleteById(id);
+	}
+
+	@Override
+	public Iterable<Product> findAl() {
+		return productRepository.findAll();
 	}
 }

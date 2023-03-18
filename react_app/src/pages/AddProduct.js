@@ -3,13 +3,16 @@ import { connect } from "react-redux";
 import { authenticate, authFailure, authSuccess } from "../redux/authActions";
 import "./loginpage.css";
 import { userLogin } from "../api/authenticationService";
-import { postAProduct } from "../api/postService";
+import { postAProduct } from "../api/productService";
 import { Alert, Spinner } from "react-bootstrap";
 
-const Addpost = ({ loading, error, ...props }) => {
+const Addproduct = ({ loading, error, ...props }) => {
   const [values, setValues] = useState({
     productName: "",
     price: "",
+    description: "",
+    qty: "",
+    imageBase64: "",
   });
 
   const handleSubmit = (evt) => {
@@ -21,7 +24,7 @@ const Addpost = ({ loading, error, ...props }) => {
         if (response.status === 200) {
           alert("Successfully posted product");
           // props.setUser(response.data);
-          props.history.push("/dashboard");
+          props.history.push("/");
         } else {
           alert("Something Wrong!Please Try Again 1");
         }
@@ -61,7 +64,7 @@ const Addpost = ({ loading, error, ...props }) => {
             <div className="card-wrapper">
               <div className="card fat">
                 <div className="card-body">
-                  <h4 className="card-title">Add Post</h4>
+                  <h4 className="card-title">Add Product</h4>
 
                   <form
                     className="my-login-validation"
@@ -101,9 +104,62 @@ const Addpost = ({ loading, error, ...props }) => {
                       <div className="invalid-feedback">price is required</div>
                     </div>
 
+                    <div className="form-group">
+                      <label htmlFor="email">Product description</label>
+                      <input
+                        id="description"
+                        type="text"
+                        className="form-control"
+                        minLength={2}
+                        value={values.description}
+                        onChange={handleChange}
+                        name="description"
+                        required
+                      />
+
+                      <div className="invalid-feedback">
+                        product description is invalid
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="email">Image data</label>
+                      <input
+                        id="imageBase64"
+                        type="text"
+                        className="form-control"
+                        minLength={2}
+                        value={values.imageBase64}
+                        onChange={handleChange}
+                        name="imageBase64"
+                        required
+                      />
+
+                      <div className="invalid-feedback">
+                        imageBase64 is invalid
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Product Quantity</label>
+                      <input
+                        id="qty"
+                        type="text"
+                        className="form-control"
+                        minLength={2}
+                        value={values.qty}
+                        onChange={handleChange}
+                        name="qty"
+                        required
+                      />
+                      <div className="invalid-feedback">
+                        Quantity is required
+                      </div>
+                    </div>
+
                     <div className="form-group m-0">
                       <button type="submit" className="btn btn-primary">
-                        Add a post
+                        Add a product
                         {loading && (
                           <Spinner
                             as="span"
@@ -131,20 +187,4 @@ const Addpost = ({ loading, error, ...props }) => {
   );
 };
 
-// const mapStateToProps = ({ auth }) => {
-//   console.log("state ", auth);
-//   return {
-//     loading: auth.loading,
-//     error: auth.error,
-//   };
-// };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     authenticate: () => dispatch(authenticate()),
-//     setUser: (data) => dispatch(authSuccess(data)),
-//     loginFailure: (message) => dispatch(authFailure(message)),
-//   };
-// };
-
-export default connect()(Addpost);
+export default Addproduct;

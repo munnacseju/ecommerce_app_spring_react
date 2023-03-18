@@ -30,6 +30,9 @@ public class Product {
 
     @Column(columnDefinition = "TEXT")
 	private String imageBase64;
+    
+	public Product() {
+	}
 
 	public Product(Long id, User user, @NotNull String productName, Long qty, Long price, String description,
 			String imageBase64) {
