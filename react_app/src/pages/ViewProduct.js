@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
-import { viewProducts } from "../api/productService";
+import { deleteProducts, viewProducts } from "../api/productService";
+import { Button } from "react-bootstrap";
 
 export default class PersonList extends React.Component {
   state = {
@@ -36,6 +37,15 @@ export default class PersonList extends React.Component {
   }
 
   render() {
+    function deleteProduct(params) {
+      deleteProducts(params).then((response) => {
+        if (response.status === 200) {
+          alert("You have successfully deleted " + params);
+        } else {
+          alert("Something Wrong!Please Try Again 1");
+        }
+      });
+    }
     const x = <div></div>;
     return (
       <ul>
@@ -47,6 +57,7 @@ export default class PersonList extends React.Component {
             Id: {product.id} <br />
             price: {product.price} <br />
             Description: {product.description}
+            <Button onClick={() => deleteProduct(product.id)}>Delete</Button>
           </li>
         ))}
       </ul>

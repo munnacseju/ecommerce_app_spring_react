@@ -16,7 +16,7 @@ export const postAProduct = (authRequest) => {
   });
 };
 
-export const viewProducts = (authRequest) => {
+export const viewProducts = (request) => {
   return axios({
     method: "GET",
     url: `${
@@ -25,6 +25,19 @@ export const viewProducts = (authRequest) => {
     headers: {
       Authorization: "Bearer " + getToken(),
     },
-    data: authRequest,
+    data: request,
+  });
+};
+
+export const deleteProducts = (params) => {
+  return axios({
+    method: "GET",
+    url:
+      `${process.env.hostUrl || "http://localhost:8080"}/api/deleteProduct/` +
+      params,
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+    data: params,
   });
 };
