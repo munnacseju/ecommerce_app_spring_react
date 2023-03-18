@@ -1,9 +1,14 @@
 package com.daycare.app.backend.controllers;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +66,7 @@ public class ProductController {
             return response;
         }
     }
-    
+
     @RequestMapping(value = UPDATE_PRODUCT, method = RequestMethod.POST)
     @ResponseBody
     public HashMap<String, Object> updateProduct(@RequestBody Product product) {
@@ -83,7 +88,6 @@ public class ProductController {
         }
     }
 
-
     @RequestMapping(value = FIND_ALL_PRODUCTS, method = RequestMethod.GET)
     @ResponseBody
     public HashMap<String, Object> findProducts() {
@@ -91,7 +95,15 @@ public class ProductController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> userOptional = userService.findByUserName(email);
         User user = userOptional.get();
-        response.put("products", productService.findAl());
+        Iterable<Product> products = productService.findAll();
+        
+        Iterable<Product> productsIterable = productService.findAll();
+        List<Product> productsList = StreamSupport.stream(productsIterable.spliterator(), false)
+                                                  .collect(Collectors.toList());
+        Collections.sort(productsList, Comparator.comparingDouble(Product::getPrice));
+
+        
+        response.put("products", productsList);
         response.put("status", EcommerceConstant.STATUS.OK);
         // ProductService.findByUser(user);
         return response;

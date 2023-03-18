@@ -101,11 +101,19 @@ export default function ViewOrder() {
                   >
                     Approve
                   </Button>
+                  <Button
+                    variant="primary"
+                    style={{ margin: "2px" }}
+                    onClick={() => updateAOrder(order, "DELIVERED")}
+                  >
+                    Deliver
+                  </Button>
                 </>
               )}
             {order.status === "APPROVED" ||
             order.status === "REGECTED" ||
-            order.status === "CANCELLED" ? (
+            order.status === "CANCELLED" ||
+            order.status === "DELIVERED" ? (
               <></>
             ) : (
               <>

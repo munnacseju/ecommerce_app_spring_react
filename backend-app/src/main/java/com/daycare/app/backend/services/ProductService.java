@@ -9,6 +9,6 @@ public interface ProductService {
 	void save(Product Product);
 	Optional<Product> findById(Long id);
     Iterable<Product> findByUser(User user);
-    public Iterable<Product> findAl();
+    public Iterable<Product> findAll();
 	void deleteById(Long id);
 }

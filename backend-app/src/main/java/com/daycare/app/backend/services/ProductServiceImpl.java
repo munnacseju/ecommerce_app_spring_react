@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Iterable<Product> findAl() {
+	public Iterable<Product> findAll() {
 		return productRepository.findAll();
 	}
 }

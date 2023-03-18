@@ -60,18 +60,24 @@ const ViewProduct = ({ history }) => {
       productId: product.id,
       orderedPrice: product.price,
     };
-    addOrder(order)
-      .then((response) => {
-        if (response.status === 200) {
-          product.qty = product.qty - 1;
-          updateAProduct(product);
-        } else {
+    if (product.qty === 0) {
+      alert("Out of stock");
+    } else {
+      addOrder(order)
+        .then((response) => {
+          if (response.status === 200) {
+            history.push("/vieworder");
+
+            product.qty = product.qty - 1;
+            updateAProduct(product);
+          } else {
+            alert("Something went wrong! Please try again.");
+          }
+        })
+        .catch((error) => {
           alert("Something went wrong! Please try again.");
-        }
-      })
-      .catch((error) => {
-        alert("Something went wrong! Please try again.");
-      });
+        });
+    }
   }
 
   function updateAProduct(product) {

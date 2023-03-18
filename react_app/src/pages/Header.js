@@ -23,9 +23,6 @@ class Header extends React.Component {
           ) : (
             <>
               <Nav className="mr-auto">
-                <Nav.Link as={Link} to="/">
-                  Dashboard
-                </Nav.Link>
                 <Nav.Link as={Link} to="/viewproduct">
                   View Products
                 </Nav.Link>
