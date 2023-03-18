@@ -63,17 +63,7 @@ public class OrderController {
             response.put("message", "Order id empty");
             return response;
         }
-        Long orderId = order.getId();
-        Optional<Order> updatedOrderOptional = orderService.findById(orderId);
-        if (updatedOrderOptional.isEmpty()) {
-            response.put("status", EcommerceConstant.STATUS.NOT_OK);
-            response.put("message", "Invalid order id");
-            return response;
-        }
-
-        Order updatedOrder = updatedOrderOptional.get();
-        updatedOrder.setPaymentDone(true);
-        orderService.save(updatedOrder);
+        orderService.save(order);
         response.put("status", EcommerceConstant.STATUS.OK);
         response.put("message", "Successfully updated order");
         return response;
