@@ -19,7 +19,6 @@ const Footer = () => {
       }}
     >
       <h1>Footer Part</h1>
-      <button onClick={handleViewProduct}>View Products</button>
     </div>
   );
 };

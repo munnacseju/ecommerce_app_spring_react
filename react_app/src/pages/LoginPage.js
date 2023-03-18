@@ -21,6 +21,7 @@ const LoginPage = ({ loading, error, ...props }) => {
         if (response.status === 200) {
           props.setUser(response.data);
           props.history.push("/viewproduct");
+          window.location.reload();
         } else {
           props.loginFailure("Something Wrong!Please Try Again");
         }
