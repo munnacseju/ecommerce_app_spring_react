@@ -5,8 +5,7 @@ import styled from "styled-components";
 import { fetchUserData } from "../../api/authenticationService";
 import AddProduct from "../AddProduct";
 import ViewProduct from "../ViewProduct";
-import Header from "../Header";
-import Footer from "../Footer";
+import ViewOrder from "../ViewOrder";
 
 const MainWrapper = styled.div`
   padding-top: 40px;
@@ -35,7 +34,6 @@ export const Dashboard = (props) => {
 
   return (
     <Container>
-      <Header />
       <MainWrapper>
         <h4>Hello {data && `${data.firstName} ${data.lastName}`}</h4>
         <br></br>
@@ -46,7 +44,11 @@ export const Dashboard = (props) => {
             <h3 type="variant">
               {/* Add User */}
               <AddProduct />
+
+              <h1>Prodcut List: </h1>
               <ViewProduct />
+              <h1>Order List: </h1>
+              <ViewOrder />
             </h3>
           )}
         <br></br>
@@ -55,7 +57,6 @@ export const Dashboard = (props) => {
           Logout
         </Button>
       </MainWrapper>
-      <Footer />
     </Container>
   );
 };

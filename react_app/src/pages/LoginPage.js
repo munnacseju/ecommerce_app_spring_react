@@ -20,7 +20,7 @@ const LoginPage = ({ loading, error, ...props }) => {
         console.log("response", response);
         if (response.status === 200) {
           props.setUser(response.data);
-          props.history.push("/dashboard");
+          props.history.push("/viewproduct");
         } else {
           props.loginFailure("Something Wrong!Please Try Again");
         }

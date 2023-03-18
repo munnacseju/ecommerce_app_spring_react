@@ -1,10 +1,7 @@
 import react, { useState } from "react";
-import { connect } from "react-redux";
-import { authenticate, authFailure, authSuccess } from "../redux/authActions";
 import "./loginpage.css";
-import { userLogin } from "../api/authenticationService";
 import { postAProduct } from "../api/productService";
-import { Alert, Spinner } from "react-bootstrap";
+import { Button, Card, Form, Spinner, Alert } from "react-bootstrap";
 
 const Addproduct = ({ loading, error, ...props }) => {
   const [values, setValues] = useState({
@@ -15,16 +12,26 @@ const Addproduct = ({ loading, error, ...props }) => {
     imageBase64: "",
   });
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setValues((values) => ({
+        ...values,
+        imageBase64: reader.result,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     postAProduct(values)
       .then((response) => {
-        console.log("response", response + "klsdfjkdsfjk");
-        console.log("values ", values + " jsdkf");
         if (response.status === 200) {
           alert("Successfully posted product");
           // props.setUser(response.data);
-          props.history.push("/");
+          props.history.push("/viewproduct");
         } else {
           alert("Something Wrong!Please Try Again 1");
         }
@@ -57,128 +64,125 @@ const Addproduct = ({ loading, error, ...props }) => {
   console.log("Loading ", loading);
 
   return (
-    <div className="login-page">
+    <div className="my-3">
       <section className="h-100">
-        <div className="container h-100">
-          <div className="row justify-content-md-center h-100">
+        <div className="container h-100 w-100">
+          <div className="justify-content-md-center h-100">
             <div className="card-wrapper">
-              <div className="card fat">
-                <div className="card-body">
-                  <h4 className="card-title">Add Product</h4>
-
-                  <form
+              <Card className="fat">
+                <Card.Body>
+                  <Card.Title className="h1 text-primary">
+                    Add Product
+                  </Card.Title>
+                  <Form
                     className="my-login-validation"
                     onSubmit={handleSubmit}
                     noValidate={false}
                   >
-                    <div className="form-group">
-                      <label htmlFor="email">Product Name</label>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Product Name</Form.Label>
+                      <Form.Control
                         id="productName"
                         type="text"
-                        className="form-control"
                         minLength={2}
                         value={values.productName}
                         onChange={handleChange}
                         name="productName"
                         required
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Product Name is invalid
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-                      <div className="invalid-feedback">
-                        product Name is invalid
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Price</label>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Price</Form.Label>
+                      <Form.Control
                         id="text"
-                        type="text"
-                        className="form-control"
+                        type="number"
                         minLength={2}
                         value={values.price}
                         onChange={handleChange}
                         name="price"
                         required
                       />
-                      <div className="invalid-feedback">price is required</div>
-                    </div>
+                      <Form.Control.Feedback type="invalid">
+                        Price is required
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-                    <div className="form-group">
-                      <label htmlFor="email">Product description</label>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Product Description</Form.Label>
+                      <Form.Control
                         id="description"
                         type="text"
-                        className="form-control"
                         minLength={2}
                         value={values.description}
                         onChange={handleChange}
                         name="description"
                         required
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Product description is invalid
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-                      <div className="invalid-feedback">
-                        product description is invalid
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="email">Image data</label>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Upload an Image</Form.Label>
+                      <Form.File
                         id="imageBase64"
-                        type="text"
-                        className="form-control"
-                        minLength={2}
-                        value={values.imageBase64}
-                        onChange={handleChange}
                         name="imageBase64"
+                        onChange={handleImageChange}
                         required
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Image data is invalid
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-                      <div className="invalid-feedback">
-                        imageBase64 is invalid
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Product Quantity</label>
-                      <input
+                    <Form.Group>
+                      <Form.Label>Product Quantity</Form.Label>
+                      <Form.Control
                         id="qty"
-                        type="text"
-                        className="form-control"
+                        type="number"
                         minLength={2}
                         value={values.qty}
                         onChange={handleChange}
                         name="qty"
                         required
                       />
-                      <div className="invalid-feedback">
+                      <Form.Control.Feedback type="invalid">
                         Quantity is required
-                      </div>
-                    </div>
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-                    <div className="form-group m-0">
-                      <button type="submit" className="btn btn-primary">
-                        Add a product
-                        {loading && (
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </button>
-                    </div>
-                  </form>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={loading}
+                      className="mb-3"
+                    >
+                      Add a Product
+                      {loading && (
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="ml-1"
+                        />
+                      )}
+                    </Button>
+                  </Form>
+
                   {error && (
                     <Alert style={{ marginTop: "20px" }} variant="danger">
                       {error}
                     </Alert>
                   )}
-                </div>
-              </div>
+                </Card.Body>
+              </Card>
             </div>
           </div>
         </div>

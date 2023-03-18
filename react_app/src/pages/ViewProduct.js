@@ -1,66 +1,132 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { deleteProducts, viewProducts } from "../api/productService";
-import { Button } from "react-bootstrap";
+import {
+  deleteProducts,
+  updateProducts,
+  viewProducts,
+} from "../api/productService";
+import { Button, Card } from "react-bootstrap";
+import { addOrder } from "../api/orderService";
 
-export default class PersonList extends React.Component {
-  state = {
-    products: [],
-  };
+const ViewProduct = ({ history }) => {
+  const [products, setProducts] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
+    refreshProducts();
+  }, []);
+
+  function refreshProducts() {
     viewProducts()
       .then((response) => {
         if (response.status === 200) {
-          const products = response.data.products;
-          this.setState({ products });
-          // props.setUser(response.data);
-          //   props.history.push("/");
+          setProducts(response.data.products);
         } else {
-          alert("Something Wrong!Please Try Again 1");
+          alert("Something went wrong! Please try again.");
         }
       })
-      .catch((err) => {
-        if (err && err.response) {
-          switch (err.response.status) {
+      .catch((error) => {
+        if (error.response) {
+          switch (error.response.status) {
             case 401:
-              console.log("401 status");
-              alert("Authentication Failed.Bad Credentials");
+              alert("Authentication failed: bad credentials.");
               break;
             default:
-              alert(
-                "Something Wrong!Please Try Again 2  " + err.response.status
-              );
+              alert("Something went wrong! Please try again.");
           }
+        } else {
+          alert("Something went wrong! Please try again.");
         }
       });
   }
 
-  render() {
-    function deleteProduct(params) {
-      deleteProducts(params).then((response) => {
+  function handleDelete(id) {
+    deleteProducts(id)
+      .then((response) => {
         if (response.status === 200) {
-          alert("You have successfully deleted " + params);
+          alert(`Product with id ${id} has been deleted successfully.`);
+          refreshProducts();
         } else {
-          alert("Something Wrong!Please Try Again 1");
+          alert("Something went wrong! Please try again.");
         }
+      })
+      .catch((error) => {
+        alert("Something went wrong! Please try again.");
       });
-    }
-    const x = <div></div>;
-    return (
-      <ul>
-        {this.state.products.map((product) => (
-          <li key={product.id}>
-            Product details:
-            <br />
-            Name: {product.productName} <br />
-            Id: {product.id} <br />
-            price: {product.price} <br />
-            Description: {product.description}
-            <Button onClick={() => deleteProduct(product.id)}>Delete</Button>
-          </li>
-        ))}
-      </ul>
-    );
   }
-}
+
+  function handleOrder(product) {
+    const order = {
+      productId: product.id,
+      orderedPrice: product.price,
+    };
+    addOrder(order)
+      .then((response) => {
+        if (response.status === 200) {
+          alert(
+            `You have successfully ordered product ${product.productName}.`
+          );
+          product.qty = product.qty - 1;
+          updateAProduct(product);
+          // history.push("/vieworder");
+        } else {
+          alert("Something went wrong! Please try again.");
+        }
+      })
+      .catch((error) => {
+        alert("Something went wrong! Please try again.");
+      });
+  }
+
+  function updateAProduct(product) {
+    updateProducts(product)
+      .then((response) => {
+        if (response.status === 200) {
+          alert(
+            `You have successfully updated product ${product.productName}.`
+          );
+          history.push("/vieworder");
+        } else {
+          alert("Something went wrong! Please try again.");
+        }
+      })
+      .catch((error) => {
+        alert("Something went wrong! Please try again.");
+      });
+  }
+
+  return (
+    <div className="d-flex mx-5 my-3 flex-wrap justify-content-around align-items-center">
+      {products.map((product) => (
+        <Card
+          style={{ width: "18rem", margin: "10px" }}
+          className="mx-3"
+          key={product.id}
+        >
+          <img
+            src={`${product.imageBase64}`}
+            alt="product image"
+            className="w-100"
+            style={{
+              maxHeight: "100px",
+            }}
+          />
+          <Card.Body>
+            <Card.Title>Name: {product.productName}</Card.Title>
+            <Card.Text>Description: {product.description}</Card.Text>
+            <Card.Text>Quantity: {product.qty}</Card.Text>
+            <div className="d-flex justify-content-between">
+              <Button variant="danger" onClick={() => handleDelete(product.id)}>
+                Delete
+              </Button>
+              <Button variant="primary" onClick={() => handleOrder(product)}>
+                Order
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+export default ViewProduct;

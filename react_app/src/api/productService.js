@@ -29,6 +29,17 @@ export const viewProducts = (request) => {
   });
 };
 
+export const updateProducts = (request) => {
+  return axios({
+    method: "POST",
+    url: `${process.env.hostUrl || "http://localhost:8080"}/api/updateProduct`,
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+    data: request,
+  });
+};
+
 export const deleteProducts = (params) => {
   return axios({
     method: "GET",
