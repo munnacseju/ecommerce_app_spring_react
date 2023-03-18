@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.daycare.app.backend.services.UserService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class OrderController {
     public static final String ADD_ORDER = "/addOrder";
     public static final String UPDATE_ORDER = "/updateOrder";
@@ -29,10 +31,10 @@ public class OrderController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private OrderService orderService;
-    
+
     @RequestMapping(value = ADD_ORDER, method = RequestMethod.POST)
     @ResponseBody
     public HashMap<String, Object> addOrder(@RequestBody Order order) {
@@ -56,24 +58,24 @@ public class OrderController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> userOptional = userService.findByUserName(email);
         User user = userOptional.get();
-        if(order.getId()==null){
+        if (order.getId() == null) {
             response.put("status", EcommerceConstant.STATUS.NOT_OK);
-            response.put("message", "Order id empty");        
+            response.put("message", "Order id empty");
             return response;
         }
-        Long orderId = order.getId();        		
-        Optional<Order> updatedOrderOptional =  orderService.findById(orderId);
-        if(updatedOrderOptional.isEmpty()) {
-        	response.put("status", EcommerceConstant.STATUS.NOT_OK);
-            response.put("message", "Invalid order id");        
+        Long orderId = order.getId();
+        Optional<Order> updatedOrderOptional = orderService.findById(orderId);
+        if (updatedOrderOptional.isEmpty()) {
+            response.put("status", EcommerceConstant.STATUS.NOT_OK);
+            response.put("message", "Invalid order id");
             return response;
         }
-        
+
         Order updatedOrder = updatedOrderOptional.get();
         updatedOrder.setPaymentDone(true);
         orderService.save(updatedOrder);
         response.put("status", EcommerceConstant.STATUS.OK);
-        response.put("message", "Successfully updated order");        
+        response.put("message", "Successfully updated order");
         return response;
     }
 

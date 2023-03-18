@@ -26,34 +26,27 @@ import com.daycare.app.backend.services.UserService;
 @RequestMapping("/api")
 @CrossOrigin
 public class ProductController {
-    public static final String ADD_Product = "/addProduct";
-    public static final String FIND_Product_BY_ID = "/findProduct/{id}";
+    public static final String ADD_PRODUCT = "/addProduct";
+    public static final String FIND_PRODUCT_BY_ID = "/findProduct/{id}";
     public static final String FIND_ALL_Product_BY_USER = "/findAllProduct";
     public static final String FIND_ALL_PRODUCTS = "/findAllProducts";
-
-    public static final String DELETE_Product = "/deleteProduct/{id}";
+    public static final String UPDATE_PRODUCT = "/updateProduct";
+    public static final String DELETE_PRODUCT = "/deleteProduct/{id}";
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private ProductService productService;
-    
-    @RequestMapping(value = ADD_Product, method = RequestMethod.POST)
+
+    @RequestMapping(value = ADD_PRODUCT, method = RequestMethod.POST)
     @ResponseBody
     public HashMap<String, Object> addProduct(@RequestBody Product product) {
         HashMap<String, Object> response = new HashMap<>();
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> userOptional = userService.findByUserName(email);
-        
+
         User user = userOptional.get();
-//        user.getAuthorities().stream()
-//        .filter(authority -> authority.getAuthority().equals("ADMIN"))
-//        .forEach(authority -> System.out.println("ADMIN"));
-
-
-        System.out.println("Okay....");
-        
         List<Authority> authorities = (List<Authority>) user.getAuthorities();
         if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
             product.setUser(user);
@@ -69,6 +62,28 @@ public class ProductController {
         }
     }
     
+    @RequestMapping(value = UPDATE_PRODUCT, method = RequestMethod.POST)
+    @ResponseBody
+    public HashMap<String, Object> updateProduct(@RequestBody Product product) {
+        HashMap<String, Object> response = new HashMap<>();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> userOptional = userService.findByUserName(email);
+        User user = userOptional.get();
+        List<Authority> authorities = (List<Authority>) user.getAuthorities();
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            productService.save(product);
+            response.put("product", product);
+            response.put("status", EcommerceConstant.STATUS.OK);
+            response.put("message", "Successfully added product");
+            return response;
+        } else {
+            response.put("status", EcommerceConstant.STATUS.NOT_OK);
+            response.put("message", "Successfully added product");
+            return response;
+        }
+    }
+
+
     @RequestMapping(value = FIND_ALL_PRODUCTS, method = RequestMethod.GET)
     @ResponseBody
     public HashMap<String, Object> findProducts() {
@@ -95,7 +110,7 @@ public class ProductController {
         return response;
     }
 
-    @RequestMapping(value = DELETE_Product, method = RequestMethod.POST)
+    @RequestMapping(value = DELETE_PRODUCT, method = RequestMethod.GET)
     @ResponseBody
     public HashMap<String, Object> deleteProduct(@PathVariable Long id) {
         HashMap<String, Object> response = new HashMap<>();
