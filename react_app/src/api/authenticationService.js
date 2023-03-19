@@ -5,6 +5,30 @@ export const getToken = () => {
   return localStorage.getItem("USER_KEY");
 };
 
+export const fetchAllUSer = (request) => {
+  return axios({
+    method: "GET",
+    url: `${process.env.hostUrl || "http://localhost:8080"}/api/v1/alluser/`,
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+    data: request,
+  });
+};
+
+export const makeAdmin = (request) => {
+  return axios({
+    method: "GET",
+    url:
+      `${process.env.hostUrl || "http://localhost:8080"}/api/v1/makeadmin/` +
+      request,
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+    data: request,
+  });
+};
+
 export const userLogin = (request) => {
   return axios({
     method: "POST",

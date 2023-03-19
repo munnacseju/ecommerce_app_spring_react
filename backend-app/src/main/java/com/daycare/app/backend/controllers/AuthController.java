@@ -57,6 +57,9 @@ public class AuthController {
 	public static final String REGISTER = "/register";
 	public static final String LOGGED_USER_DETAILS = "/me";
 	public static final String VERIFY_PIN = "/verifypin/{pin}";
+	public static final String MAKE_ADMIN = "/makeadmin/{id}";
+	public static final String ALL_USER = "/alluser";
+
 
 	@Autowired
 	private UserService userService;
@@ -105,6 +108,48 @@ public class AuthController {
 		// verification code", "Hello, Your Daycare account varification code is
 		// "+verificationPin);
 		System.out.println("Mail send " + user.getUsername());
+		return response;
+	}
+	
+	@RequestMapping(value = MAKE_ADMIN, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String, Object> makeAdmin(@PathVariable Long id) {
+		HashMap<String, Object> response = new HashMap<>();
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<User> adminOptional = userService.findByUserName(email);
+		User admin = adminOptional.get();
+		
+        List<Authority> authorities = (List<Authority>) admin.getAuthorities();
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        	Optional<User> userOptional = userService.findById(id);
+        	if(userOptional.isPresent()) {
+        		User user = userOptional.get();
+        		List<Authority> authorityList = new ArrayList<>();
+        		authorityList.add(createAuthority("USER", "User role"));
+        		authorityList.add(createAuthority("ADMIN", "Admin role"));
+        		user.setAuthorities(authorityList);
+        		userService.save(user);
+        		response.put("status", EcommerceConstant.STATUS.OK);
+        	}
+        }
+   		response.put("status", EcommerceConstant.STATUS.NOT_OK);
+		
+		return response;
+	}
+	
+	@RequestMapping(value = ALL_USER, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String, Object> findAllUser() {
+		HashMap<String, Object> response = new HashMap<>();
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<User> adminOptional = userService.findByUserName(email);
+		User admin = adminOptional.get();
+		
+        List<Authority> authorities = (List<Authority>) admin.getAuthorities();
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        	response.put("users", userService.findAll());
+        }
+		
 		return response;
 	}
 

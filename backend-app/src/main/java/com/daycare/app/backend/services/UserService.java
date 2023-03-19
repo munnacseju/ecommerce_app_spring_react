@@ -8,6 +8,7 @@ public interface UserService {
     void save(User user);
 
     Optional<User> findById(Long id);
+    Iterable<User> findAll();
 
     Optional<User> findByUserName(String userName);
 }

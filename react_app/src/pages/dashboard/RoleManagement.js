@@ -5,14 +5,17 @@ import {
   viewProducts,
 } from "../../api/productService";
 import { Button, Card, Form } from "react-bootstrap";
-import { addOrder } from "../../api/orderService";
-import { fetchUserData } from "../../api/authenticationService";
+import {
+  fetchAllUSer,
+  fetchUserData,
+  makeAdmin,
+} from "../../api/authenticationService";
 const RoleManagement = ({ history }) => {
-  const [products, setProducts] = useState([]);
+  const [users, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    refreshProducts();
+    refreshUsers();
   }, []);
 
   const [data, setData] = useState();
@@ -22,11 +25,11 @@ const RoleManagement = ({ history }) => {
       setData(response.data);
     });
   }, []);
-  function refreshProducts() {
-    viewProducts()
+  function refreshUsers() {
+    fetchAllUSer()
       .then((response) => {
         if (response.status === 200) {
-          setProducts(response.data.products);
+          setProducts(response.data.users);
         } else {
           alert("Something went wrong! Please try again.");
         }
@@ -46,73 +49,33 @@ const RoleManagement = ({ history }) => {
       });
   }
 
-  function handleDelete(id) {
-    deleteProducts(id)
+  function makeAdminUser(user) {
+    makeAdmin(user.id)
       .then((response) => {
         if (response.status === 200) {
-          alert(`Product with id ${id} has been deleted successfully.`);
-          refreshProducts();
+          alert("Admin made");
+          refreshUsers();
         } else {
           alert("Something went wrong! Please try again.");
         }
       })
       .catch((error) => {
-        alert("Something went wrong! Please try again.");
+        alert("Something went wrong! Please try again. (error)" + error);
       });
   }
-
-  function handleOrder(product) {
-    const order = {
-      productId: product.id,
-      orderedPrice: product.price,
-    };
-    if (product.qty === 0) {
-      alert("Out of stock");
-    } else {
-      addOrder(order)
-        .then((response) => {
-          if (response.status === 200) {
-            history.push("/vieworder");
-
-            product.qty = product.qty - 1;
-            updateAProduct(product);
-          } else {
-            alert("Something went wrong! Please try again.");
-          }
-        })
-        .catch((error) => {
-          alert("Something went wrong! Please try again.");
-        });
-    }
-  }
-
-  function updateAProduct(product) {
-    updateProducts(product)
-      .then((response) => {
-        if (response.status === 200) {
-          history.push("/vieworder");
-        } else {
-          alert("Something went wrong! Please try again.");
-        }
-      })
-      .catch((error) => {
-        alert("Something went wrong! Please try again.");
-      });
-  }
-
   function handleSearch(event) {
     setSearchTerm(event.target.value);
   }
 
-  function useSearchProductsByName(products, searchTerm) {
+  function useSearchProductsByName(users, searchTerm) {
     return searchTerm.trim() === ""
-      ? products
-      : products.filter((product) =>
-          product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+      ? users
+      : users.filter((user) =>
+          user.userName.toLowerCase().includes(searchTerm.toLowerCase())
         );
   }
 
-  const filteredProducts = useSearchProductsByName(products, searchTerm);
+  const filteredProducts = useSearchProductsByName(users, searchTerm);
 
   return (
     <div>
@@ -127,39 +90,32 @@ const RoleManagement = ({ history }) => {
         </Form.Group>
       </Form>
       <div className="d-flex mx-5 my-3 flex-wrap justify-content-around align-items-center">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((user) => (
           <Card
             style={{ width: "18rem", margin: "10px" }}
             className="mx-3"
-            key={product.id}
+            key={user.id}
           >
-            <img
-              src={`${product.imageBase64}`}
-              alt="product image"
-              className="w-100"
-              style={{
-                maxHeight: "100px",
-              }}
-            />
             <Card.Body>
-              <Card.Title>Name: {product.productName}</Card.Title>
-              <Card.Text>Description: {product.description}</Card.Text>
-              <Card.Text>Quantity: {product.qty}</Card.Text>
+              <Card.Title>User Name: {user.userName}</Card.Title>
+              <Card.Text>
+                Name: {user.firstName + "  " + user.lastName}
+              </Card.Text>
+              <Card.Text>
+                authorities:
+                <br />
+                {user.authorities.map((authority) => (
+                  <>
+                    Role Code: <>{authority.roleCode}</>
+                    <br />
+                    Role Code: <>{authority.roleDescription}</>
+                    <br />
+                  </>
+                ))}
+              </Card.Text>{" "}
               <div className="d-flex justify-content-between">
-                {data &&
-                  data.roles &&
-                  data.roles.filter((value) => value.roleCode === "ADMIN")
-                    .length > 0 && (
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDelete(product.id)}
-                    >
-                      Delete
-                    </Button>
-                  )}
-
-                <Button variant="primary" onClick={() => handleOrder(product)}>
-                  Order
+                <Button variant="primary" onClick={() => makeAdminUser(user)}>
+                  Make admin
                 </Button>
               </div>
             </Card.Body>
