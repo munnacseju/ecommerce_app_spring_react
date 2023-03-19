@@ -10,7 +10,7 @@ import ViewOrder from "../ViewOrder";
 const MainWrapper = styled.div`
   padding-top: 40px;
 `;
-var hello = 0;
+
 export const Dashboard = (props) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);

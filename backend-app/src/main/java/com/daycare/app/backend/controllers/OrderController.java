@@ -1,6 +1,7 @@
 package com.daycare.app.backend.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daycare.app.backend.constant.EcommerceConstant;
+import com.daycare.app.backend.models.Authority;
 import com.daycare.app.backend.models.Order;
 import com.daycare.app.backend.models.User;
 import com.daycare.app.backend.services.OrderService;
@@ -77,7 +79,12 @@ public class OrderController {
         Optional<User> userOptional = userService.findByUserName(email);
         User user = userOptional.get();
         response.put("status", EcommerceConstant.STATUS.OK);
-        response.put("orders", orderService.findByUser(user));
+        List<Authority> authorities = (List<Authority>) user.getAuthorities();
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            response.put("orders", orderService.findAll());
+        }else {
+            response.put("orders", orderService.findByUser(user));
+        }
         // orderService.findByUser(user);
         return response;
     }

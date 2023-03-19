@@ -5,10 +5,18 @@ export const getToken = () => {
   return localStorage.getItem("USER_KEY");
 };
 
-export const userLogin = (authRequest) => {
+export const userLogin = (request) => {
   return axios({
     method: "POST",
     url: `${process.env.hostUrl || "http://localhost:8080"}/api/v1/auth/login`,
+    data: request,
+  });
+};
+
+export const userRegister = (authRequest) => {
+  return axios({
+    method: "POST",
+    url: `${process.env.hostUrl || "http://localhost:8080"}/api/v1/register`,
     data: authRequest,
   });
 };

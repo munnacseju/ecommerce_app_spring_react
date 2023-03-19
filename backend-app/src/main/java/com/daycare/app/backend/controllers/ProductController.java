@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -62,7 +63,7 @@ public class ProductController {
             return response;
         } else {
             response.put("status", EcommerceConstant.STATUS.NOT_OK);
-            response.put("message", "Successfully added product");
+            response.put("message", "Permission Denied!");
             return response;
         }
     }
@@ -83,7 +84,7 @@ public class ProductController {
             return response;
         } else {
             response.put("status", EcommerceConstant.STATUS.NOT_OK);
-            response.put("message", "Successfully added product");
+            response.put("message", "Permission Denied!");
             return response;
         }
     }
@@ -125,10 +126,19 @@ public class ProductController {
     @RequestMapping(value = DELETE_PRODUCT, method = RequestMethod.GET)
     @ResponseBody
     public HashMap<String, Object> deleteProduct(@PathVariable Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> userOptional = userService.findByUserName(email);
+        User user = userOptional.get();
         HashMap<String, Object> response = new HashMap<>();
-        productService.deleteById(id);
-        response.put("status", EcommerceConstant.STATUS.OK);
-        response.put("message", "Successfully Product deleted");
+        List<Authority> authorities = (List<Authority>) user.getAuthorities();
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            productService.deleteById(id);
+            response.put("status", EcommerceConstant.STATUS.OK);
+            response.put("message", "Successfully Product deleted");
+        }else {
+            response.put("status", EcommerceConstant.STATUS.NOT_OK);
+            response.put("message", "Permission Denied!");
+        }
         return response;
     }
 }

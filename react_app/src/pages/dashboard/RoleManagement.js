@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   deleteProducts,
   updateProducts,
   viewProducts,
-} from "../api/productService";
+} from "../../api/productService";
 import { Button, Card, Form } from "react-bootstrap";
-import { addOrder } from "../api/orderService";
-import { fetchUserData } from "../api/authenticationService";
-
-const ViewProduct = ({ history }) => {
+import { addOrder } from "../../api/orderService";
+import { fetchUserData } from "../../api/authenticationService";
+const RoleManagement = ({ history }) => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -171,4 +169,4 @@ const ViewProduct = ({ history }) => {
     </div>
   );
 };
-export default ViewProduct;
+export default RoleManagement;
