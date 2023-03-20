@@ -1,5 +1,4 @@
 import react, { useState } from "react";
-import "./loginpage.css";
 import { postAProduct } from "../api/productService";
 import { Button, Card, Form, Spinner, Alert } from "react-bootstrap";
 

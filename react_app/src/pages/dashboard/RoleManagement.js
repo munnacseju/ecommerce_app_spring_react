@@ -9,6 +9,7 @@ import {
   fetchAllUSer,
   fetchUserData,
   makeAdmin,
+  removeAdmin,
 } from "../../api/authenticationService";
 const RoleManagement = ({ history }) => {
   const [users, setProducts] = useState([]);
@@ -19,6 +20,7 @@ const RoleManagement = ({ history }) => {
   }, []);
 
   const [data, setData] = useState();
+  var isAdmin = false;
 
   React.useEffect(() => {
     fetchUserData().then((response) => {
@@ -63,6 +65,22 @@ const RoleManagement = ({ history }) => {
         alert("Something went wrong! Please try again. (error)" + error);
       });
   }
+
+  function removeAdminUser(user) {
+    removeAdmin(user.id)
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Remove Admin");
+          refreshUsers();
+        } else {
+          alert("Something went wrong! Please try again.");
+        }
+      })
+      .catch((error) => {
+        alert("Something went wrong! Please try again. (error)" + error);
+      });
+  }
+
   function handleSearch(event) {
     setSearchTerm(event.target.value);
   }
@@ -75,7 +93,7 @@ const RoleManagement = ({ history }) => {
         );
   }
 
-  const filteredProducts = useSearchProductsByName(users, searchTerm);
+  const filteredUsers = useSearchProductsByName(users, searchTerm);
 
   return (
     <div>
@@ -90,22 +108,32 @@ const RoleManagement = ({ history }) => {
         </Form.Group>
       </Form>
       <div className="d-flex mx-5 my-3 flex-wrap justify-content-around align-items-center">
-        {filteredProducts.map((user) => (
+        {filteredUsers.map((user) => (
           <Card
             style={{ width: "18rem", margin: "10px" }}
             className="mx-3"
             key={user.id}
           >
             <Card.Body>
+              <img
+                src={`${user.imageBase64}`}
+                alt="User profile image"
+                className="w-100"
+                style={{
+                  maxHeight: "100px",
+                }}
+              />
               <Card.Title>User Name: {user.userName}</Card.Title>
               <Card.Text>
                 Name: {user.firstName + "  " + user.lastName}
               </Card.Text>
               <Card.Text>
                 authorities:
+                {(isAdmin = false)}
                 <br />
                 {user.authorities.map((authority) => (
                   <>
+                    {authority.roleCode === "ADMIN" ? (isAdmin = true) : <></>}
                     Role Code: <>{authority.roleCode}</>
                     <br />
                     Role Code: <>{authority.roleDescription}</>
@@ -113,11 +141,23 @@ const RoleManagement = ({ history }) => {
                   </>
                 ))}
               </Card.Text>{" "}
-              <div className="d-flex justify-content-between">
-                <Button variant="primary" onClick={() => makeAdminUser(user)}>
-                  Make admin
-                </Button>
-              </div>
+              {isAdmin ? (
+                <div className="d-flex justify-content-between">
+                  <Button
+                    variant="danger"
+                    onClick={() => removeAdminUser(user)}
+                  >
+                    Remove Admin
+                  </Button>
+                </div>
+              ) : (
+                <div className="d-flex justify-content-between">
+                  <Button variant="primary" onClick={() => makeAdminUser(user)}>
+                    {" "}
+                    Make Admin
+                  </Button>
+                </div>
+              )}
             </Card.Body>
           </Card>
         ))}
