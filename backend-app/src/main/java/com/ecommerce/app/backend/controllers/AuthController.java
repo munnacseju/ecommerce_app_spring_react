@@ -240,6 +240,8 @@ public class AuthController {
 		userInfo.setFirstName(userObj.getFirstName());
 		userInfo.setLastName(userObj.getLastName());
 		userInfo.setRoles(userObj.getAuthorities().toArray());
+		userInfo.setUserName(userObj.getUserName());
+		userInfo.setImageBase64(userObj.getImageBase64());
 		return ResponseEntity.ok(userInfo);
 	}
 

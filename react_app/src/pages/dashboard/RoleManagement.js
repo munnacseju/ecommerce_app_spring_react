@@ -128,16 +128,17 @@ const RoleManagement = ({ history }) => {
                 Name: {user.firstName + "  " + user.lastName}
               </Card.Text>
               <Card.Text>
-                authorities:
+                <p>Authorities:</p>
                 {(isAdmin = false)}
-                <br />
                 {user.authorities.map((authority) => (
                   <>
                     {authority.roleCode === "ADMIN" ? (isAdmin = true) : <></>}
-                    Role Code: <>{authority.roleCode}</>
-                    <br />
-                    Role Code: <>{authority.roleDescription}</>
-                    <br />
+                    <>
+                      <p>{authority.roleCode}</p>
+                    </>
+                    {/* <>
+                      <p>{authority.roleDescription}</p>
+                    </> */}
                   </>
                 ))}
               </Card.Text>{" "}
