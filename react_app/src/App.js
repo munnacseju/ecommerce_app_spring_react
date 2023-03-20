@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
 import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
 import ViewOrder from "./pages/ViewOrder";
