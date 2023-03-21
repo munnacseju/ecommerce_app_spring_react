@@ -12,6 +12,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AddProductTest {
 
@@ -20,20 +23,19 @@ public class AddProductTest {
 
     @Test
     public void addProductTest() {
-        // Create the request body
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("productName", "Sample Product");
-        body.add("qty", 10);
-        body.add("price", 100);
-        body.add("description", "This is a sample product description.");
-        body.add("imageBase64", "iVBO");
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("productName", "Sample Product");
+        body.put("qty", 10);
+        body.put("price", 100);
+        body.put("description", "This is a sample product description.");
+        body.put("imageBase64", "dummy...");
 
         // Create the headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTcHJpbmctU2VjdXJpdHktQXBwIiwic3ViIjoiaGVsbG8iLCJpYXQiOjE2Nzk0MjUwMDEsImV4cCI6MTY3OTc4NTAwMX0.b-lobtMfXLldfpLpBsBa7EQAe3OSH9v21PgN3dE_yTk");
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity("/api/addProduct", requestEntity, String.class);
 
