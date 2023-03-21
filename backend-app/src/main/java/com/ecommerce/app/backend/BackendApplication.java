@@ -1,27 +1,10 @@
 package com.ecommerce.app.backend;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.ecommerce.app.backend.models.Authority;
-import com.ecommerce.app.backend.models.User;
-import com.ecommerce.app.backend.repositories.UserDetailsRepository;
 
 @SpringBootApplication
 public class BackendApplication {
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private UserDetailsRepository userDetailsRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);

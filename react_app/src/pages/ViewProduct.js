@@ -140,7 +140,7 @@ const ViewProduct = ({ history }) => {
               alt="product image"
               className="w-100"
               style={{
-                maxHeight: "100px",
+                maxHeight: "150px",
               }}
             />
             <Card.Body>

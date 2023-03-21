@@ -31,6 +31,8 @@ public class Order {
 
 	private String status;
 
+	private Long orderedPrice;
+
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp createdTime = new Timestamp(System.currentTimeMillis());
 
@@ -40,8 +42,6 @@ public class Order {
 	private boolean isPaymentDone = false;
 
 	private boolean isDelivered = false;
-
-	private Long orderedPrice;
 
 	public Order() {
 	}

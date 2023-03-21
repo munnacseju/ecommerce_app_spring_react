@@ -57,7 +57,7 @@ const LoginPage = ({ loading, error, ...props }) => {
   console.log("Loading ", loading);
 
   return (
-    <div className="login-page mt-4">
+    <div className="login-page mt-5 mb-3">
       <section className="h-100">
         <div className="container h-100">
           <div className="row justify-content-md-center h-100">
@@ -90,7 +90,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                     <div className="form-group">
                       <label>
                         Password
-                        <a href="forgot.html" className="float-right">
+                        <a href="/" className="float-right mx-2">
                           Forgot Password?
                         </a>
                       </label>
